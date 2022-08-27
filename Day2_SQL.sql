@@ -12,7 +12,7 @@ create table personel_adres
 as
 select pers_id, sehir, adres from personel;
 
-select * from personel
+select * from personel;
 
 -- DML --> Data Manupulation Lang.
 -- INSERT - UPDATE - DELETE
@@ -34,8 +34,8 @@ insert into student(st_name,age) values ('Murat Can',65);
 
 --DQL --> Data Query Lang.
 --SELECT
-select * from student; //Bu şekilde her şeyi getirir
-select st_name from student;//sadece isimleri istersek böyle yapılır
+select * from student; --Bu şekilde her şeyi getirir
+select st_name from student;--sadece isimleri istersek böyle yapılır
 
 --SELECT KOMUTU WHERE KOŞULU
 select * from student WHERE age>35;  //yaşı 35ten buyuk olanlar gelir
@@ -44,6 +44,7 @@ select * from student WHERE age>35;  //yaşı 35ten buyuk olanlar gelir
 --Begin - Savepoint - rollback - commit
 --Transaction veritabanı sistemlerinde bir işlem başladığında başlar ve işlem bitince sona erer
 --Bu işlemler veri tabanı oluşturma, veri silme, veri güncelleme, veriyi geri getirme gibi işlemler olabilir
+
 CREATE TABLE ogrenciler2(
 id serial, --serial yaptığımız için default yaptık
 isim VARCHAR(50),
@@ -108,6 +109,7 @@ DELETE FROM ogrenciler WHERE isim ='Nesibe Yilmaz' or isim = 'Mustafa Bak';
 -- soru : ismi Ali Can ve id'si 123 olan kaydı siliniz
 delete from ogrenciler WHERE isim='Ali Can' or id=123;
 
+
 -- Tablodaki tüm verileri silelim
 Delete from ogrenciler; 
 --sildikten sonra tekrar ekleme yapmak mümkün isimleri işaretleyip tekrar çalıştırınca ekleme yapılır
@@ -122,7 +124,8 @@ TRUNCATE TABLE ogrenciler;
 -- DDL - Data Definition Lang.
 -- CREATE - ALTER - DROP
 -- ALTER TABLE --
--- ALTER TABLE tabloda ADD, TYPE, SET, RENAME veya DROP COLUMNS işlemleri için kullanılır
+-- ALTER TABLE tabloda ADD, TYPE, SET, RENAME veya DROP COLUMNS işlemleri 
+-- için kullanılır
 
 --Personel isminde bir tablo oluşturalım
 create table personel(
@@ -141,6 +144,7 @@ alter table personel add cinsiyet varchar(20), add yas int;
 
 --Personel tablosundan sirket field'ini siliniz
 alter table personel drop column sirket;
+-- Personel tablosundan sütun silmek için drop column yaparız
 
 -- Personel tablosundaki sehir sutununun adını ulke olarak değiştirelim
 alter table personel RENAME column sehir to ulke;
@@ -173,13 +177,15 @@ select * from isciler;
 DROP table isciler;
 --son olarak böyle yaparak tekrar iscileri sildik
 
--- CONSTRANINT -- Kısıtlamalar
+-- CONSTRAINT -- Kısıtlamalar
 -- Primary Key --> Bir sutunun NULL içermemesini ve sutundaki verilerin BENZERSİZ olmasını sağlar (NOT NULL - UNIQUE)
 -- FOREGIN KEY --> Başka bir tablodaki PRİMARY KEY'i referans göstermek için kullanılır. Böylelikle, tablolar arasında ilişki kurmuş oluruz.
 -- UNIQUE --> Bir sutundaki tüm değerlerin BENZERSİZ yani tek olmasını sağlar
 -- NOT NULL --> Bir sutunun NULL içermemesini yani boş olmamasını sağlar
 -- NOT NULL kısıtlaması için CONSTRAINT ismi tanımlanmaz. Bu kısıtlama veri türünden hemen sonra yerleştirilir
 -- CHECK --> Bir sutuna yerleştirilebilecek değer aralığını sınırlamak için kullanılır.
+
+
 
 CREATE TABLE calisanlar(
 id CHAR(5) PRIMARY KEY, -- not null + unique
@@ -246,7 +252,7 @@ INSERT INTO adresler VALUES(NULL,'Ağa Sok', '30.Cad.','Antep');
 select * from calisanlar, adresler WHERE calisanlar.id = adresler.adres_id;
 --yukarıdaki kısımla sadece eşleşenler geldi
 
-DROP table calisanlar --direkt calısmaz hata verir bağlantılı yerden kaynaklı
+DROP table calisanlar; --direkt calısmaz hata verir bağlantılı yerden kaynaklı
 --Parent tabloyu yani primary key olan tabloyu silmek istediğimizde tabloyu silmez
 --Önce child tabloyu silmemiz gerekir
 
