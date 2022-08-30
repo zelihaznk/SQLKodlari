@@ -48,8 +48,30 @@ select * from markalar;--- markalar tablosu için birleşme yeri marke_isim kıs
 
 -- SORU2: marka_id’si 101’den büyük olan marka çalişanlarinin isim, maaş ve
 --şehirlerini listeleyiniz.
-select isim, maas, sehir from calisanlar
-where isyeri in(select marka_isim from markalar where marka_id > '101');
+select isim,maas,sehir from calisanlar 
+where isyeri in(select marka_isim from markalar where marka_id>101 )
+
+-- SORU3: Ankara’da calisani olan markalarin marka id'lerini ve calisan sayilarini listeleyiniz.
+select marka_id,calisan_sayisi from markalar 
+where marka_isim in(select isyeri from calisanlar where sehir='Ankara')
+  
+      
+-- SORU4: Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin toplam maaşini listeleyen bir Sorgu yaziniz.
+select marka_isim,calisan_sayisi,(select sum(maas) as toplam_maas from calisanlar  where marka_isim=isyeri) from markalar
+--aggregate method olunca in'e gerek kalmiyor ama ayni veriye sahip sutunlari esitlemek gerekir ==> where marka_isim=isyeri
+ 
+-- SORU5: Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin ortalama maaşini listeleyen bir Sorgu yaziniz.
+select marka_isim,calisan_sayisi,(select round(avg(maas)) as ortalama_maas from calisanlar where marka_isim=isyeri)
+from markalar
+
+-- SORU6: Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin maksimum ve minumum maaşini listeleyen bir Sorgu yaziniz.
+select marka_isim,calisan_sayisi,(select max(maas) as max_maas from calisanlar where marka_isim=isyeri),
+(select min(maas) as min_maas from calisanlar where marka_isim=isyeri)
+from markalar
+
+-- SORU7: Her markanin id’sini, ismini ve toplam kaç şehirde bulunduğunu listeleyen bir SORGU yaziniz.
+select marka_id,marka_isim,(select count(sehir) as toplam_bulundugu_sehir from calisanlar where marka_isim=isyeri)
+from markalar
 
 
 
