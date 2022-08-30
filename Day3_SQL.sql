@@ -23,6 +23,8 @@ INSERT INTO calisanlar VALUES('', 'osman', 2000, '2018-04-14');
 --INSERT INTO calisanlar VALUES( '10002', 'ayse Yılmaz' ,12000, '2018-04-14'); --PRIMARY KEY
 --INSERT INTO calisanlar VALUES( null, 'filiz ' ,12000, '2018-04-14'); -- PRIMARY KEY
 
+INSERT INTO calisanlar VALUES('10012', 'nil', 2000, '2018-04-14');
+
 -- FOREIGN KEY--
 CREATE TABLE adresler
 (
@@ -32,18 +34,24 @@ cadde varchar(30),
 sehir varchar(20),
 CONSTRAINT fk FOREIGN KEY (adres_id) REFERENCES calisanlar(id)
 );
+
 INSERT INTO adresler VALUES('10003','Mutlu Sok', '40.Cad.','IST');
 INSERT INTO adresler VALUES('10003','Can Sok', '50.Cad.','Ankara');
 INSERT INTO adresler VALUES('10002','Ağa Sok', '30.Cad.','Antep');
+
 select * from adresler;
+select * from calisanlar;
+
 INSERT INTO adresler VALUES('10012','Ağa Sok', '30.Cad.','Antep');
+-------Yukarıda calısanlar tablosuna eklediğimiz için artık çalışıyor
 --Parent tabloda olmayan id ile child tabloya ekleme yapamayız
+
 INSERT INTO adresler VALUES(NULL,'Ağa Sok', '30.Cad.','Antep');
 
 --Calısanlar id ile adresler tablosundaki adres_id ile eşlesenlere bakmak için
 select * from calisanlar,adresler WHERE calisanlar.id = adresler.adres_id;
 
-DROP table calisanlar
+DROP table calisanlar;
 --Parant tabloyu yani primary key olan tabloyu silmek istediğimizde tabloyu silmez
 --Önce child tabloyu silmemiz gerekir
 
@@ -86,6 +94,7 @@ INSERT INTO notlar VALUES ('126', 'Matematik',90);
 
 select * from talebeler;
 select * from notlar;
+select * from talebeler, notlar;
 
 delete from notlar WHERE talebe_id = '123';
 
@@ -97,13 +106,36 @@ DELETE from talebeler;
 DROP table talebeler CASCADE; -- Parent tableyi kaldırmak istersek Drop table tablo adından sonra 
 --CASCADE komutunu kullanırız
 
--- Talebeler tablosundaki isim sütununa NOTT NULL kısıtlaması ekleyiniz ve veri tipini VARCHAR(30) olarak değiştiriniz
+/*
+CASCADE: REFERENCES ile belirtilen sütunda bir eylem (UPDATE, DELETE) olduğunda 
+Foreign key ile belirtilen ilişkili sütunda benzer eylemi yapar.
 
+NO ACTION: Foreign key sütunu ve REFERENCES ile belirtilen sütunda bir ilişki varsa, 
+REFERENCES ile belirtilen sütunda bir eyleme (UPDATE, DELETE) izin vermez.
+
+SET NULL: REFERENCES ile belirtilen sütunda bir eylem (UPDATE, DELETE) olduğunda 
+Foreign key ile belirtilen ilişkili sütunu NULL yapar.
+
+NOT: Foreign key sütununda NOT NULL kısıtlaması varsa hata verir.
+
+SET DEFAULT: REFERENCES ile belirtilen sütunda bir eylem (UPDATE, DELETE) olduğunda 
+Foreign key ile belirtilen ilişkili sütuna DEFAULT değerini verir.
+
+NOT: Foreign key sütununda DEFAULT kısıtlaması yoksa hata verir.
+
+RESTIRCT: MySQL VTYS içerisinde bulunan bu eylem NO ACTION ile aynı işleve sahiptir.
+*/
+
+
+
+
+-- Talebeler tablosundaki isim sütununa NOTT NULL kısıtlaması ekleyiniz ve veri tipini VARCHAR(30) olarak değiştiriniz
 --Yeni bir şey eklemek istediğimiz zaman alter table yaparız
 
 alter table talebeler 
 alter column isim TYPE VARCHAR (30),--TYPE İLE DATA TÜRÜ DEĞİŞTİ
 alter column isim SET NOT NULL; -- SET İLE DE EKLEME YAPILDI
+--Alter table column üzerinde değişiklik yapar
 
 select * from talebeler;
 
@@ -116,6 +148,7 @@ ADD CONSTRAINT sinir CHECK (yazili_notu>60);
 
 
 INSERT INTO talebeler VALUES(128, 'Mustafa Can', 'Hasan',45);
+------Not 60 dan küçük olduğu için hata verir!!
 
 create table ogrenciler(
 id int,
@@ -125,24 +158,28 @@ sinav_notu int
 );
 
 Create table ogrenci_adres
-AS
+AS 
 SELECT id, adres from ogrenciler;
+-----Yeni bir tablo oluştur ve ıd ve adresi öğrencilerden alarak oluştur
 
 select * from ogrenciler;
 select * from ogrenci_adres;
 
 --Tablodaki bir sütunu bir sütuna PRIMARY KEY ekleme
-
 alter table ogrenciler
 ADD PRIMARY KEY (id);
+------>clustered index Clustered index bir tabloda yanlızca bir tane olur. Aslında bunu hepimiz kullanıyoruz genelde. Clustered index ile tablodaki kayıtlar, fiziksel olarak indeksleme alanına göre dizilmiş şekildedir. Bu yapılanma dengeli ağaç(B-Tree) yapısına sahibtir.
+-----PRIMARY KEY benzersiz olmasını sağlar ve null ekleme yapılmaz
 
 --PRIMARY KEY olusturmada 2. yol
 alter table ogrenciler
 ADD CONSTRAINT pk_id PRIMARY KEY(id);
 
+
+
 --PK'dan sonra FK ataması
 alter table ogrenci_adres
-ADD foreign key (id) REFERENCES ogrenciler;
+ADD foreign key (id) REFERENCES ogrenciler;----Foreinkey olan kısım nonclustered olur
 --Child tabloyu parent tablodan olusturdugumuz için sütun adı verilmedi
 
 --PK'yi silme CONTRAINT silme
@@ -157,9 +194,15 @@ Select * from talebeler WHERE yazili_notu>85;
 --İsmi Mustafa Bak olan talebenin tüm bilgilerini getirin
 select * from talebeler WHERE isim= 'Mustafa Bak';
 
+Select * from talebeler WHERE yazili_notu>85 and isim= 'Mustafa Bak';
+----and tüm şartların doğru olması gerekir
+
+Select * from talebeler WHERE yazili_notu>85 or isim= 'Mustafa Bak';
+----or Herbir satır için herhangi bir satırın şartını sağlıyorsa 
+
 -- SELECT komutunda -- BETWEEN koşulu
 -- Between belirttiğiniz 2 veri arasındaki bilgileri listeler
--- Between de belirttiğimiz değerlere listelemeye dahildir
+-- Between de belirttiğimiz değerler de listelemeye dahildir
 
 create table personel
 (
@@ -174,6 +217,9 @@ insert into personel values('1003', 'Ayşe Tan', 65000);
 insert into personel values('1004', 'Derya Soylu', 95000);
 insert into personel values('1005', 'Yavuz Bal', 80000);
 insert into personel values('1006', 'Sena Beyaz', 100000);
+
+insert into personel values('1007', 'Erhan Ece', 100000);
+insert into personel values('1008', 'Binali Can', 100000);
 
 /*
     AND (ve): Belirtilen şartların her ikiside gerçekleşiyorsa o kayıt listelenir
@@ -196,7 +242,7 @@ select * from personel WHERE id>='1003' and id<='1005';
 --Derya Soylu ile Yavuz Bal arasındaki personel bilgisini listeleyiniz
 select * from personel WHERE isim BETWEEN 'Derya Soylu' and 'Yavuz Bal';
 
---Maaşı 70000 ve ismi Sena olan personeli listele
+--Maaşı 70000 veya ismi Sena olan personeli listele
 select * from personel WHERE maas='70000' or isim='Sena Beyaz';
 --OR ile dahil ettik buna dikkat etmelisin
 
@@ -229,11 +275,15 @@ _ --> Tek bir karakteri belirtir
 --İsmi A harfi ile başlayan personeli listeleyin 
 select * from personel WHERE isim LIKE 'A%'; --Başı derse % sonra
 
+
 --İsmi t harfi ile biten personeli listele
 select * from personel WHERE isim LIKE '%t'; -- Sonu derse % önce
 
 --Isminin 2. harfi e olan personeli listeleyiniz
 select * from personel WHERE isim LIKE '_e%';
+
+---Isminin 5. harfi e olan personeli listeleyiniz
+select * from personel where isim like '____a%';
 
 
 

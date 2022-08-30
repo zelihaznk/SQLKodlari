@@ -1,4 +1,13 @@
 -- DML --> UPDATE --> Tablodaki verileri günceller
+/*
+Bir tablodaki kaydın bir ya da daha fazla alanını günceller, değiştirir.
+Olan bir kaydı güncellemeye ve değiştirmeye yarar
+
+UPDATE TABLOADI
+SET COLUMN1=VALUE1, COLUMN2=VALUR2
+WHERE<ŞARTLAR>
+
+*/
 
 CREATE TABLE tedarikciler -- parent
 (
@@ -52,6 +61,7 @@ SET firma_ismi = 'Casper',irtibat_ismi='Ali Veli' where vergi_no=101;
 --SET ile güncelleme yapılır
 
 select * from urunler;
+select * from tedarikciler;
 
 --  urunler tablosundaki 'Phone' değerlerini 'Telefon' 
 --olarak güncelleyiniz.
@@ -74,14 +84,26 @@ SET urun_id=ted_vergino+urun_id;
 -- 'Adam Eve' olan firmanın ismi (firma_ismi) ile degistiriniz.
 --("burada urunler ve tedarikciler tablolarini yeniden olusturduk soruyu çözebilmek için)
 
+select * from urunler, tedarikciler;
+
 UPDATE urunler
 SET urun_isim = (select firma_ismi from tedarikciler where irtibat_ismi='Adam Eve')
 WHERE musteri_isim = 'Ali Bak';
+
+select * from urunler;
+select * from tedarikciler;
 
 
 -- Urunler tablosunda laptop satin alan musterilerin ismini, 
 --firma_ismi Apple’in irtibat_isim'i ile degistirin.
 UPDATE urunler
 SET musteri_isim = (select irtibat_ismi from tedarikciler where firma_ismi ='Apple')
-WHERE urun_isim = 'Laptop'
+WHERE urun_isim = 'Laptop';
+
+
+
+
+
+
+
 
