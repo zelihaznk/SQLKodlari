@@ -7,6 +7,20 @@ GROUP BY genelde, AVG(), COUNT(), MAX(), MIN() ve SUM() gibi aggregate fonsyonla
 birlikte kullanılır
 */
 
+
+/*
+SQL GROUP BY komutu aynı değerlere sahip verileri gruplamamızı sağlar. 
+GROUP komutu verileri bir veya daha fazla sütunla gruplamak için toplama 
+işlevleri kullanır.(COUNT, MAX, MIN, SUM, AVG)
+
+
+SELECT sütun_adı(s)
+FROM tablo_adı
+WHERE koşul
+GROUP BY sütun_adı(s)
+ORDER BY sütun_adı (s);
+*/
+
 CREATE TABLE manav 
 (
     isim varchar(50), 
@@ -61,28 +75,43 @@ insert into personel values(119, 'Ayten', 'Tan', '32', 'K', 'Roma', 'Italya', '3
 
 select * from personel;
 
+/*
+SELECT sütun_adı(s)
+FROM tablo_adı
+WHERE koşul
+GROUP BY sütun_adı(s)
+ORDER BY sütun_adı (s);
+*/
+
 -- kisi ismine göre satılan toplam meyve miktarlarını 
 -- gösteren sorguyu yazınız.
-select isim, sum(urun_miktari) as toplam_urun from manav
+
+select * from manav;
+
+select isim, sum(urun_miktari) as toplam_urun 
+from manav
 group by isim ;
 
 -- satılan meyve türüne (urun_adi) göre urun alan kişi sayısını 
 --gösteren sorguyu yazınız. NULL olarak girilen meyveyi listelemesin.
-select urun_adi, count(isim) as kisi_sayisi from manav -- satılan meyve türüne göre ürün adını sec
-where urun_adi is not null -- koşul olarak null olanı versesin
+
+select urun_adi, count(isim) as kisi_sayisi from manav  -- satılan meyve türüne göre ürün adını sec
+where urun_adi is not null -- koşul olarak null olanı vermesin
 group by urun_adi; -- daha sonragrupladık 
 
 
 -- satılan meyve türüne (urun_adi) göre satılan (urun_miktari )MIN ve
 -- MAX urun miktarlarini, MAX urun miktarina göre 
 -- sıralayarak listeyen sorguyu yazınız.
+
 SELECT urun_adi, min(urun_miktari) as minimum_urun_mik, max(urun_miktari) as maksimum_urun_mik from manav
 where urun_adi is not null
 group by urun_adi
-order by maksimum_urun_mik desc;
+order by maksimum_urun_mik desc;---Order bay büyükten küçüge sıralamak için kullanılır 
 
 -- kisi ismine ve urun adına göre satılan ürünlerin toplamını gruplandıran
 -- ve isime göre ters sırasıda listeyen sorguyu yazınız.
+
 select isim, urun_adi, sum(urun_miktari) as toplam_urun from manav
 group by isim, urun_adi ----group by' a yazdığınız kolonları from'dan önce yazmanız gerekir
 order by isim desc;
@@ -93,19 +122,22 @@ select * from personel;
 -- personelin calıştığı ülkeleri listeleyiniz
 select ulke from personel group by ulke;
 
-select ulke, count(*) from personel group by ulke; ---- kişi sayısı
+select ulke, count(*) from personel group by ulke; ---- kişi sayısına göre sıralamayı getirdi
 
 -- Ülkelere göre ortalama maaşları listeleyiniz
-select ulke, round(avg(maas),2) as ortalama_maas --- ulkelere göre ortalama maası aldık ---virgulden sonraki iki basamak ı aldık parantez icinde
+
+select ulke, round(avg(maas),2) as ortalama_maas --- ulkelere göre ortalama maası aldık ---virgulden sonraki iki basamak ı round ile aldık parantez icinde
 from personel --- bunu personel den bul dedik
-group by ulke; --- nasıl istediğimizi de group yaparak ilkelere göre yaptık
+group by ulke; --- nasıl istediğimizi de group yaparak ülkelere göre yaptık
 
 -- Maas ortalamasını bayanlar ve baylar olarak sorgulayınız
+
 select cinsiyet, round(avg(maas)) as ortalama_maas
 from personel
 group by cinsiyet;
 
 -- Personelin, ulkelere göre ve şehirlere göre gruplayarak sorgulayın
+
 select ulke, sehir from personel
 group by ulke, sehir;
 ----- select 'ten sonra ekranda görmek istedğimiz sütunları yazmak genel kural
